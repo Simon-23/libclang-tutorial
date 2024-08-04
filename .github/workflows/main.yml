@@ -34,5 +34,5 @@ jobs:
           echo Running make
           make
           echo Then run the file
-          sh ./build/bin/hello-world
+          ./build/bin/hello-world
           
