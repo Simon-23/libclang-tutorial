@@ -27,21 +27,22 @@ jobs:
       - name: Set up Homebrew
         run: |
           sudo apt-get update
-          sudo apt-get install build-essential curl file git
+          sudo apt-get install -y build-essential curl file git
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $GITHUB_ENV
-          echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> $GITHUB_ENV
-          echo 'export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> $GITHUB_ENV
+          echo "HOMEBREW_PREFIX=$(/home/linuxbrew/.linuxbrew/bin/brew --prefix)" >> $GITHUB_ENV
+          echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> $GITHUB_ENV
+          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH" >> $GITHUB_ENV
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew update
 
       - name: Install LLVM
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          source $GITHUB_ENV
           brew install llvm@15
-          echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/llvm@15/bin:$PATH"' >> $GITHUB_ENV
-          echo 'export LDFLAGS="-L/home/linuxbrew/.linuxbrew/opt/llvm@15/lib"' >> $GITHUB_ENV
-          echo 'export CPPFLAGS="-I/home/linuxbrew/.linuxbrew/opt/llvm@15/include"' >> $GITHUB_ENV
+          echo "LLVM_PREFIX=/home/linuxbrew/.linuxbrew/opt/llvm@15" >> $GITHUB_ENV
+          echo "PATH=$LLVM_PREFIX/bin:$PATH" >> $GITHUB_ENV
+          echo "LDFLAGS=-L$LLVM_PREFIX/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I$LLVM_PREFIX/include" >> $GITHUB_ENV
 
       - name: Verify LLVM Installation
         run: |
