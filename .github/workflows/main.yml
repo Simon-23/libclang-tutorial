@@ -28,13 +28,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install build-essential curl file git
-          yes '' | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.profile
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew update
 
       - name: Install LLVM
         run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install llvm@15
           echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/llvm@15/bin:$PATH"' >>~/.profile
           echo 'export LDFLAGS="-L/home/linuxbrew/.linuxbrew/opt/llvm@15/lib"' >>~/.profile
@@ -43,11 +44,16 @@ jobs:
 
       - name: Verify LLVM Installation
         run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           llvm-config --version
 
       - name: Configure Project
-        run: cmake .
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          cmake .
 
       - name: Build Project
-        run: make VERBOSE=1
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          make VERBOSE=1
           
