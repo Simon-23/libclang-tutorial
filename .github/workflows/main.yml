@@ -27,6 +27,8 @@ jobs:
         run: |
           echo Here is what is in the folder
           ls -a
+          echo Installing dependencies
+          brew install llvm@15 cmake pkg-config zstd
           echo Exporting path
           export "PATH=$HOMEBREW_PREFIX/opt/llvm@15/bin:$PATH"
           echo Running make
