@@ -28,7 +28,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential curl file git coreutils
-          echo "PATH=$(which dirname):$(which readlink):$PATH" >> $GITHUB_ENV
 
       - name: Debug Check installed tools
         run: |
@@ -42,18 +41,23 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> $GITHUB_ENV
-          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:\$PATH" >> $GITHUB_ENV
-          source $HOME/.bashrc
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH" >> $GITHUB_ENV
+
+      - name: Verify Homebrew Installation
+        run: |
+          source $GITHUB_ENV
+          echo "Homebrew Path:"
+          which brew
+          brew --version
           brew update
 
       - name: Install LLVM
         run: |
           source $GITHUB_ENV
-          brew install llvm@15
-          LLVM_PREFIX=$(/home/linuxbrew/.linuxbrew/opt/llvm@15)
+          /home/linuxbrew/.linuxbrew/bin/brew install llvm@15
+          LLVM_PREFIX=$(/home/linuxbrew/.linuxbrew/bin/brew --prefix llvm@15)
           echo "LLVM_PREFIX=$LLVM_PREFIX" >> $GITHUB_ENV
-          echo "PATH=$LLVM_PREFIX/bin:\$PATH" >> $GITHUB_ENV
+          echo "PATH=$LLVM_PREFIX/bin:$PATH" >> $GITHUB_ENV
           echo "LDFLAGS=-L$LLVM_PREFIX/lib" >> $GITHUB_ENV
           echo "CPPFLAGS=-I$LLVM_PREFIX/include" >> $GITHUB_ENV
 
