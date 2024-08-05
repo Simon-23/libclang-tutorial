@@ -29,9 +29,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential curl file git
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo "HOMEBREW_PREFIX=$(/home/linuxbrew/.linuxbrew/bin/brew --prefix)" >> $GITHUB_ENV
           echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> $GITHUB_ENV
-          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH" >> $GITHUB_ENV
+          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:\$PATH" >> $GITHUB_ENV
+          source $HOME/.bashrc
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew update
 
@@ -39,8 +39,9 @@ jobs:
         run: |
           source $GITHUB_ENV
           brew install llvm@15
-          echo "LLVM_PREFIX=/home/linuxbrew/.linuxbrew/opt/llvm@15" >> $GITHUB_ENV
-          echo "PATH=$LLVM_PREFIX/bin:$PATH" >> $GITHUB_ENV
+          LLVM_PREFIX=$(/home/linuxbrew/.linuxbrew/opt/llvm@15)
+          echo "LLVM_PREFIX=$LLVM_PREFIX" >> $GITHUB_ENV
+          echo "PATH=$LLVM_PREFIX/bin:\$PATH" >> $GITHUB_ENV
           echo "LDFLAGS=-L$LLVM_PREFIX/lib" >> $GITHUB_ENV
           echo "CPPFLAGS=-I$LLVM_PREFIX/include" >> $GITHUB_ENV
 
