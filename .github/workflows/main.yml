@@ -29,10 +29,6 @@ jobs:
           ls -a
           echo Exporting path
           export "PATH=$HOMEBREW_PREFIX/opt/llvm@15/bin:$PATH"
-          echo Cleaning up make
-          make clean
           echo Running make
           make
-          echo Then run the file
-          ./build/bin/hello-world
           
