@@ -76,6 +76,10 @@ jobs:
           source $GITHUB_ENV
           make VERBOSE=1
 
+      - name: List All Files in Repository
+        run: |
+          find $GITHUB_WORKSPACE -type f -exec ls -lh {} \;
+
       # Upload the hello-world binary as an artifact
       - name: Upload hello-world binary
         uses: actions/upload-artifact@v4
