@@ -75,4 +75,11 @@ jobs:
         run: |
           source $GITHUB_ENV
           make VERBOSE=1
-          
+
+      # Upload the hello-world binary as an artifact
+      - name: Upload hello-world binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-world-binary
+          path: ./hello-world # path to the binary
+
