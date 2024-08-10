@@ -85,5 +85,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hello-world-binary
-          path: /home/runner/work/libclang-tutorial/libclang-tutorial/bin/hello-world # path to the binary
+          path: $GITHUB_WORKSPACE/bin/hello-world # path to the binary
 
