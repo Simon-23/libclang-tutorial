@@ -14,20 +14,19 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    # Change the runner to macOS
+    runs-on: macos-latest
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Check-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a set of commands using the runners shell
-
+      # Install dependencies using Homebrew
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential curl file git coreutils
+          brew update
+          brew install git coreutils
 
       - name: Debug Check installed tools
         run: |
@@ -37,25 +36,11 @@ jobs:
           echo "Current PATH:"
           echo $PATH
 
-      - name: Set up Homebrew
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew" >> $GITHUB_ENV
-          echo "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH" >> $GITHUB_ENV
-
-      - name: Verify Homebrew Installation
-        run: |
-          source $GITHUB_ENV
-          echo "Homebrew Path:"
-          which brew
-          brew --version
-          brew update
-
+      # Install LLVM using Homebrew
       - name: Install LLVM
         run: |
-          source $GITHUB_ENV
-          /home/linuxbrew/.linuxbrew/bin/brew install llvm@15
-          LLVM_PREFIX=$(/home/linuxbrew/.linuxbrew/bin/brew --prefix llvm@15)
+          brew install llvm@15
+          LLVM_PREFIX=$(brew --prefix llvm@15)
           echo "LLVM_PREFIX=$LLVM_PREFIX" >> $GITHUB_ENV
           echo "PATH=$LLVM_PREFIX/bin:$PATH" >> $GITHUB_ENV
           echo "LDFLAGS=-L$LLVM_PREFIX/lib" >> $GITHUB_ENV
@@ -86,4 +71,3 @@ jobs:
         with:
           name: hello-world-binary
           path: ${{ github.workspace }}/bin/hello-world # path to the binary
-
